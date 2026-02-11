@@ -16,6 +16,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isTransparent = isHome && !scrolled;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -38,7 +39,10 @@ const Navbar = () => {
         )}
       >
         <nav className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-20">
-          <Link to="/" className="font-serif text-2xl tracking-wider font-semibold text-foreground">
+          <Link to="/" className={cn(
+            "font-serif text-2xl tracking-wider font-semibold transition-colors duration-500",
+            isTransparent ? "text-white" : "text-foreground"
+          )}>
             ATELIER
           </Link>
 
@@ -49,10 +53,10 @@ const Navbar = () => {
                 <Link
                   to={link.path}
                   className={cn(
-                    "text-sm tracking-[0.15em] uppercase transition-colors duration-300 hover:text-foreground",
-                    location.pathname === link.path
-                      ? "text-foreground"
-                      : "text-muted-foreground"
+                    "text-sm tracking-[0.15em] uppercase transition-colors duration-300",
+                    isTransparent
+                      ? location.pathname === link.path ? "text-white" : "text-white/70 hover:text-white"
+                      : location.pathname === link.path ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {link.label}
@@ -64,7 +68,7 @@ const Navbar = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-foreground z-50"
+            className={cn("md:hidden z-50 transition-colors duration-500", isTransparent ? "text-white" : "text-foreground")}
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
